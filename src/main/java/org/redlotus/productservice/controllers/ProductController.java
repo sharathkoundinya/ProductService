@@ -1,5 +1,6 @@
 package org.redlotus.productservice.controllers;
 
+import org.redlotus.productservice.dtos.ProductRequestDto;
 import org.redlotus.productservice.models.Product;
 import org.redlotus.productservice.services.FakeStoreProductService;
 import org.redlotus.productservice.services.ProductService;
@@ -25,7 +26,6 @@ public class ProductController {
     public Product getProductById(@PathVariable("id") Long id) {
 
         return productService.getProductById(id);
-        //return new Product();
     }
 
     // localhost:2024/products
@@ -49,8 +49,9 @@ public class ProductController {
 
     // Complete replacement
     @PutMapping("/{id}")
-    public Product replaceProduct(@PathVariable("id") Long id, @RequestBody Product product) {
-        return new Product();
+    public Product replaceProduct(@PathVariable("id") Long id, @RequestBody ProductRequestDto productRequestDto) {
+
+        return productService.replaceProduct(id, productRequestDto);
     }
 
     // Delete Product

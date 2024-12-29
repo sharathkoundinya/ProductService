@@ -2,6 +2,7 @@ package org.redlotus.productservice.services;
 
 import org.redlotus.productservice.dtos.FakeStoreProductDto;
 import org.redlotus.productservice.dtos.ProductRequestDto;
+import org.redlotus.productservice.exceptions.InvalidProductIdException;
 import org.redlotus.productservice.models.Category;
 import org.redlotus.productservice.models.Product;
 import org.springframework.context.annotation.Primary;
@@ -59,16 +60,19 @@ public class FakeStoreProductService implements ProductService {
 
 
     @Override
-    public Product getProductById(Long id) {
+    public Product getProductById(Long id) throws InvalidProductIdException {
         // Call the FakeStore API to get the product with given Id
        FakeStoreProductDto fakeStoreProductDto =
                restTemplate.getForObject("https://fakestoreapi.com/products/" + id, FakeStoreProductDto.class, id);
 
         //Convert fakeStoreProductDto to product object
 
-        if(fakeStoreProductDto == null) {return null;}
+        if(fakeStoreProductDto == null) {
+            throw new InvalidProductIdException(id,  id + " is not a valid ID");
+        }
 
         return convertFakeProductDtoToProduct(fakeStoreProductDto);
+
     }
 
     @Override
@@ -126,7 +130,6 @@ public class FakeStoreProductService implements ProductService {
 
     @Override
     public void deleteProduct(Long id) {
-        HashMap hm = new HashMap();
 
 
     }

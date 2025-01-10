@@ -12,7 +12,7 @@ import lombok.Setter;
 
 
 
-
+@Getter @Setter
 public class FakeStoreProductDto {
     private Long id;
     private String title;
@@ -21,57 +21,4 @@ public class FakeStoreProductDto {
     private double price;
     private String image;
 
-    public FakeStoreProductDto setId(Long id) {
-        this.id = id;
-        return this;
-    }
-
-    public FakeStoreProductDto setTitle(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public FakeStoreProductDto setDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    public FakeStoreProductDto setCategory(String category) {
-        this.category = category;
-        return this;
-    }
-
-    public FakeStoreProductDto setPrice(double price) {
-        this.price = price;
-        return this;
-    }
-
-    public FakeStoreProductDto setImage(String image) {
-        this.image = image;
-        return this;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public String getImage() {
-        return image;
-    }
 }

@@ -9,8 +9,8 @@ import lombok.experimental.Accessors;
 @Entity
 @Getter @Setter
 public class Product extends BaseModel  {
-    @Id
-    private long id;  //Moved to BaseModel class
+//    @Id
+//    private long id;  //Moved to BaseModel class
     private String title;
     private String description;
     private double price;

@@ -10,10 +10,15 @@ import java.util.List;
 
 public interface ProductService {
     Product createProduct(Product product);
+
     Product getProductById(Long id) throws InvalidProductIdException;
+
     List<Product> getAllProducts();
+
     Product updateProduct(Long id, Product product);
+
     Product replaceProduct(Long id, ProductRequestDto productRequestDto);
+
     void deleteProduct(Long id);
 
 }

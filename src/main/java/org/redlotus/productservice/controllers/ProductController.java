@@ -6,6 +6,7 @@ import org.redlotus.productservice.exceptions.ProductControllerSpecificException
 import org.redlotus.productservice.models.Product;
 import org.redlotus.productservice.services.FakeStoreProductService;
 import org.redlotus.productservice.services.ProductService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    ProductController(ProductService productService) {
+    ProductController(@Qualifier("selfProductService") ProductService productService) {
         this.productService = productService;
     }
 
@@ -61,9 +62,9 @@ public class ProductController {
     }
 
     //Create Product
-    @PostMapping
+    @PostMapping("/save/")
     public Product createProduct(@RequestBody Product product) {
-        return new Product();
+        return productService.createProduct(product);
     }
 
     // Partial Update

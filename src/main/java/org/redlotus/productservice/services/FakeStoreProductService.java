@@ -17,8 +17,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-@Service
-@Primary
+@Service("FakeStoreProductService")
 public class FakeStoreProductService implements ProductService {
 
     private final RestTemplate restTemplate;

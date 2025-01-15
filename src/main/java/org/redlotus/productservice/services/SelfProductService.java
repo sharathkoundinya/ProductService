@@ -9,6 +9,7 @@ import org.redlotus.productservice.repositories.ProductRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,7 +59,34 @@ public class SelfProductService implements ProductService {
 
     @Override
     public Product updateProduct(Long id, Product product) {
-        return null;
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if(optionalProduct.isEmpty()) {
+            //throw an exception here --> ProductNotFound
+            throw new RuntimeException("Product not found");
+        }
+        Product currentProduct = optionalProduct.get();
+        if(product==null){throw new RuntimeException("Invalid product update sent");}
+
+        if(product.getTitle() != null){
+            // if Title is not null, that means we need to update it
+            currentProduct.setTitle(product.getTitle());
+        }
+
+        if(product.getDescription() != null){
+            currentProduct.setDescription(product.getDescription());
+        }
+        if(product.getCategory() != null){
+            currentProduct.setCategory(product.getCategory());
+        }
+        if(product.getPrice() != currentProduct.getPrice()){
+            currentProduct.setPrice(product.getPrice());
+        }
+        if(product.getImage() != null){
+            currentProduct.setImage(product.getImage());
+        }
+
+
+        return productRepository.save(currentProduct);
     }
 
     @Override

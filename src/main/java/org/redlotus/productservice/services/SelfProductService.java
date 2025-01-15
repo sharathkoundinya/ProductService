@@ -9,7 +9,7 @@ import org.redlotus.productservice.repositories.ProductRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -78,7 +78,8 @@ public class SelfProductService implements ProductService {
         if(product.getCategory() != null){
             currentProduct.setCategory(product.getCategory());
         }
-        if(product.getPrice() != currentProduct.getPrice()){
+        if(product.getPrice() != 0.0){
+            //what if there is a use case to update the price to 0.0?
             currentProduct.setPrice(product.getPrice());
         }
         if(product.getImage() != null){
@@ -96,6 +97,11 @@ public class SelfProductService implements ProductService {
 
     @Override
     public void deleteProduct(Long id) {
-
+        if(productRepository.existsById(id)){
+            productRepository.deleteById(id);
+        }
+       else{
+           throw new RuntimeException("Product not found");
+        }
     }
 }

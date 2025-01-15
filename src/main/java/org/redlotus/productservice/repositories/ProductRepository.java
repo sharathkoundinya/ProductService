@@ -22,7 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByCategory(Category category);
 
-    void deleteByTitle(String title);
+    void deleteById(Long id);
 
     @NonNull
     Product save(Product product);

@@ -92,6 +92,36 @@ public class SelfProductService implements ProductService {
 
     @Override
     public Product replaceProduct(Long id, ProductRequestDto productRequestDto) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if(optionalProduct.isEmpty()) {
+            throw new RuntimeException("Product not found");
+        }
+        Product currentProduct = optionalProduct.get();
+//        Long categoryId = currentProduct.getCategory().getId();
+//        String currentCategoryTitle = currentProduct.getCategory().getTitle();
+        String categoryTitle = productRequestDto.getCategory();
+        Optional<Category> optionalCategory = categoryRepository.findByTitle(categoryTitle);
+        if(optionalCategory.isEmpty()) {
+            //The Category provided is not present in the db, so create a new one
+            Category newCategory = new Category();
+            newCategory.setTitle(categoryTitle);
+            Category savedCategory = categoryRepository.save(newCategory);
+            currentProduct.setCategory(savedCategory);
+        }
+        else{
+            Category currentCategory = optionalCategory.get();
+            currentProduct.setCategory(currentCategory);
+        }
+
+        //Set Title
+        currentProduct.setTitle(productRequestDto.getTitle());
+        currentProduct.setDescription(productRequestDto.getDescription());
+        currentProduct.setPrice(productRequestDto.getPrice());
+        currentProduct.setImage(productRequestDto.getImage());
+
+        productRepository.save(currentProduct);
+
+
         return null;
     }
 

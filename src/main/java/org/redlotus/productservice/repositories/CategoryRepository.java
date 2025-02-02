@@ -9,4 +9,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Category save(Category category);
 
     Optional<Category> findByTitle(String title);
+
+    void deleteById(Long id);
 }

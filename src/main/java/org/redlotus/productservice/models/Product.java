@@ -1,5 +1,8 @@
 package org.redlotus.productservice.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -15,7 +18,8 @@ public class Product extends BaseModel  {
     private String description;
     private double price;
     private String image;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JsonBackReference
     private Category category;
 
 

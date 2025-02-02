@@ -28,12 +28,14 @@ public class SelfProductService implements ProductService {
 
     @Override
     public Product createProduct(Product product) {
-        Category category = product.getCategory();
+//        Category category = product.getCategory();
+//
+//        if(category.getId() == null){
+//            Category savedCategory = categoryRepository.save(category);
+//            product.setCategory(savedCategory);
+//        }
+        // This code is no longer necessary as the CascadeType.PERSIST in Product.java will take care of it
 
-        if(category.getId() == null){
-            Category savedCategory = categoryRepository.save(category);
-            product.setCategory(savedCategory);
-        }
         return productRepository.save(product);
     }
 

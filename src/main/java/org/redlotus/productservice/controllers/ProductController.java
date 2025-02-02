@@ -1,6 +1,9 @@
 package org.redlotus.productservice.controllers;
 
+import org.redlotus.productservice.commons.AuthenticationCommons;
 import org.redlotus.productservice.dtos.ProductRequestDto;
+import org.redlotus.productservice.dtos.Role;
+import org.redlotus.productservice.dtos.UserDto;
 import org.redlotus.productservice.exceptions.InvalidProductIdException;
 import org.redlotus.productservice.exceptions.ProductControllerSpecificException;
 import org.redlotus.productservice.models.Product;
@@ -21,9 +24,11 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final AuthenticationCommons authenticationCommons;
 
-    ProductController(@Qualifier("selfProductService") ProductService productService) {
+    ProductController(@Qualifier("selfProductService") ProductService productService, AuthenticationCommons authenticationCommons) {
         this.productService = productService;
+        this.authenticationCommons = authenticationCommons;
     }
 
 
@@ -55,10 +60,34 @@ public class ProductController {
     }
 
     // localhost:2024/products
-    @GetMapping
-    public List<Product> getAllProducts() {
+    @GetMapping("/all/{token}")
+    public ResponseEntity<List<Product>> getAllProducts(@PathVariable String token) {
 
-        return productService.getAllProducts();
+        //validate the token using UserService
+        UserDto userDto = authenticationCommons.validateToken(token);
+
+        if(userDto == null) {
+            //token is Invalid
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+
+        // NOTE: We are verifying that only Admin role can have access to this API
+//        boolean isAdmin = false;
+//        for(Role role : userDto.getRoles()) {
+//            if(role.equals("ADMIN")) {
+//                isAdmin = true;
+//                break;
+//            }
+//        }
+//
+//        if(!isAdmin) {
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        }
+
+        List<Product> products =  productService.getAllProducts();
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     //Create Product
@@ -83,7 +112,7 @@ public class ProductController {
     // Delete Product
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable("id") Long id) {
-        return;
+        productService.deleteProduct(id);
     }
 
 

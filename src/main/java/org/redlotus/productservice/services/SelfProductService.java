@@ -9,7 +9,7 @@ import org.redlotus.productservice.repositories.ProductRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -28,12 +28,14 @@ public class SelfProductService implements ProductService {
 
     @Override
     public Product createProduct(Product product) {
-        Category category = product.getCategory();
+//        Category category = product.getCategory();
+//
+//        if(category.getId() == null){
+//            Category savedCategory = categoryRepository.save(category);
+//            product.setCategory(savedCategory);
+//        }
+        // This code is no longer necessary as the CascadeType.PERSIST in Product.java will take care of it
 
-        if(category.getId() == null){
-            Category savedCategory = categoryRepository.save(category);
-            product.setCategory(savedCategory);
-        }
         return productRepository.save(product);
     }
 
@@ -78,7 +80,8 @@ public class SelfProductService implements ProductService {
         if(product.getCategory() != null){
             currentProduct.setCategory(product.getCategory());
         }
-        if(product.getPrice() != currentProduct.getPrice()){
+        if(product.getPrice() != 0.0){
+            //what if there is a use case to update the price to 0.0?
             currentProduct.setPrice(product.getPrice());
         }
         if(product.getImage() != null){
@@ -91,11 +94,46 @@ public class SelfProductService implements ProductService {
 
     @Override
     public Product replaceProduct(Long id, ProductRequestDto productRequestDto) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if(optionalProduct.isEmpty()) {
+            throw new RuntimeException("Product not found");
+        }
+        Product currentProduct = optionalProduct.get();
+//        Long categoryId = currentProduct.getCategory().getId();
+//        String currentCategoryTitle = currentProduct.getCategory().getTitle();
+        String categoryTitle = productRequestDto.getCategory();
+        Optional<Category> optionalCategory = categoryRepository.findByTitle(categoryTitle);
+        if(optionalCategory.isEmpty()) {
+            //The Category provided is not present in the db, so create a new one
+            Category newCategory = new Category();
+            newCategory.setTitle(categoryTitle);
+            Category savedCategory = categoryRepository.save(newCategory);
+            currentProduct.setCategory(savedCategory);
+        }
+        else{
+            Category currentCategory = optionalCategory.get();
+            currentProduct.setCategory(currentCategory);
+        }
+
+        //Set Title
+        currentProduct.setTitle(productRequestDto.getTitle());
+        currentProduct.setDescription(productRequestDto.getDescription());
+        currentProduct.setPrice(productRequestDto.getPrice());
+        currentProduct.setImage(productRequestDto.getImage());
+
+        productRepository.save(currentProduct);
+
+
         return null;
     }
 
     @Override
     public void deleteProduct(Long id) {
-
+        if(productRepository.existsById(id)){
+            productRepository.deleteById(id);
+        }
+       else{
+           throw new RuntimeException("Product not found");
+        }
     }
 }

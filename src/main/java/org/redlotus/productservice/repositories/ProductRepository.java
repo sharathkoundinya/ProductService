@@ -3,7 +3,9 @@ package org.redlotus.productservice.repositories;
 import lombok.NonNull;
 import org.redlotus.productservice.models.Category;
 import org.redlotus.productservice.models.Product;
+import org.redlotus.productservice.projections.ProductWithIdAndTitle;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,9 +24,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByCategory(Category category);
 
-    void deleteByTitle(String title);
+    void deleteById(Long id);
 
     @NonNull
     Product save(Product product);
+
+    //This method will return a product object with only Id and Title
+    // The interface ProductWithIdAndTitle is called a projection
+    @Query("select p.id as id, p.title as title from Product p where p.price>10000 and lower(p.title) like '%iPhone%'")
+    List<ProductWithIdAndTitle> someRandomQuery();
 
 }
